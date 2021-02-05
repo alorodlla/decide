@@ -8,12 +8,15 @@ before_script:
   - psql -U postgres -c "create user decide password 'decide'"
   - psql -U postgres -c "create database test_decide owner decide"
   - psql -U postgres -c "ALTER USER decide CREATEDB"
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.27.0/geckodriver-v0.27.0-linux64.tar.gz
+  - tar -xzf geckodriver-v0.27.0-linux64.tar.gz
 language: python
 python:
   - "3.6"
 install:
   - pip install -r requirements.txt
   - pip install codacy-coverage
+  - pip install selenium
 script:
   - cd decide
   - coverage run --branch --source=. ./manage.py test --keepdb --with-xunit
