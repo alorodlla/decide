@@ -9,22 +9,16 @@ before_script:
   - psql -U postgres -c "create user decide password 'decide'"
   - psql -U postgres -c "create database test_decide owner decide"
   - psql -U postgres -c "ALTER USER decide CREATEDB"
-  - sudo apt-get update
-  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  - sudo dpkg -i google-chrome*.deb
-  - sudo wget http://chromedriver.storage.googleapis.com/87.0.4280.87/chromedriver_linux64.zip
-  - sudo unzip chromedriver_linux64.zip -d /home/travis/virtualenv/python3.6.7/bin/
-  - bash -c "export CHROME_BIN=/home/travis/virtualenv/python3.6.7/bin/chromedriver"
+  - psql -U postgres -c "DROP DATABASE \"test_decide\""
 language: python
 python:
   - "3.6"
 install:
   - pip install -r requirements.txt
   - pip install codacy-coverage
-  - pip install selenium
-  - pip install webdriver-manager
 script:
   - cd decide
+  - python manage.py test
   - coverage run --branch --source=. ./manage.py test --keepdb --with-xunit
   - coverage xml
   - python-codacy-coverage -r coverage.xml
